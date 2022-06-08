@@ -17,11 +17,11 @@ struct TodoListApp: App {
 }
 
 
-struct List{
-    var List:some Scene{
-        WindowGroup{
-            ListView()
-        }
-    }
-}
-
+//struct List{
+//    var List:some Scene{
+//        WindowGroup{
+//            ListView()
+//        }
+//    }
+//}
+//
