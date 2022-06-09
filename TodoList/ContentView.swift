@@ -9,54 +9,20 @@ import SwiftUI
 
 
 struct ContentView: View {
-    func hello(str:String) -> Void {
-        print("hello",str)
-        num += 1
-    }
-    func show() -> Void {
-        bool = true
-        listItem.append("asd")
-    }
-    
-    var date:String = "TuesDay"
-    @State private var num = 1
-    @State private var bool = false
-    @State private var listItem = ["tom","cat"]
-//    @State private var len = Self.init().listItem.count
     var body: some View {
         VStack{
-            Text("Leemulus TodoList!"+date)
+            Text("Leemulus TodoList!")
                 .font(.title3)
                 .fontWeight(.light)
-                .padding()
-                .frame(width: 300.0, height: 100.0)
-            
-//            Text(String(num)+". This is My MacOs App").fontWeight(.regular).bold().frame(width: 200, height: 50, alignment: .center)
-//
-//            Form{
-//                ForEach(0..<listItem.count){
-//                    number in Text(listItem[number])
-//                }
-//            }
-//
-//            if bool{
-//                Button("添加"+String(num)) {
-//                    hello(str: date)
-//                }
-//            }
-//
-//            Button("点击显示") {
-//                show()
-//
-//            }
-            
-//            ListView().body
-            AView()
-//            Text("GitHub:chelizichen")
-//                .font(.body)
-//                .foregroundColor(Color.gray)
-//                .padding(.bottom, 20.0)
-//                .frame(width: 200.0, height: 30.0)
+                .padding(.top, 10.0)
+                .frame(width: 300.0, height: 30.0)
+            ListToDo()
+//            TodoDoneList()
+            Text("GitHub:chelizichen")
+                .font(.body)
+                .foregroundColor(Color.gray)
+                .padding(.bottom, 10.0)
+                .frame(width: 300.0, height: 30.0)
         }
     }
 }
@@ -67,40 +33,82 @@ struct ContentView_Previews: PreviewProvider {
     }
 }
 
-
-struct ListView:View{
-    @State public var list:[String] = ["Tom","Jerry"]
-    func appendItem()->[Text]{
-        var TextList:[Text] = []
-        for key in list{
-            TextList.append(Text(key))
-        }
-        return TextList
-    }
-    var body: some View{
-        VStack{
-            Form {
-                ForEach(0 ..< appendItem().count) { number in
-                    appendItem()[number]
-               }
-            }
+struct ListToDo:View{
+    @State var todolist:[String] = []
+    @State var doneList:[String] = []
+    @State var text:String = ""
+    
+    func addList(todo:String)->Void{
+        if todo.isEmpty{
+            return
+        }else{
+            let newTodo = String(todolist.count+1)+" "+todo
+            todolist.append(newTodo)
+            return
         }
     }
-}
-
-struct AView:View{
-    @State var foo = ["a","b","c"]
+    
+    //        TodoDoneList.addDone(todo: todolist[index])
+    
+    
+    func handleDone(index:Int){
+//        print(index)
+        doneList.append(todolist[index])
+        todolist.remove(at: index)
+        print(doneList)
+        print(todolist)
+    }
+    
     var body: some View{
         ZStack{
             List{
-                ForEach(foo.indices,id:\.self){
-                    index in Text(foo[index])
+                ForEach(todolist.indices,id:\.self){
+                    index in Text(todolist[index])
+                        .font(.title2).fontWeight(.bold)
+                        .foregroundColor(Color.blue)
+                        .multilineTextAlignment(.center)
+                        .lineLimit(4).onTapGesture {
+                            handleDone(index: index)
+                        }
                 }
-            }
-            Button("ADD"){
-                foo.append("d")
+            }.frame(width: 300, height: 300, alignment:.top)
+            TextField("请输入TodoItem",text:$text,onCommit:{
+                    addList(todo:text)
+                    text = ""
+                }).frame(width: 300.0, height: 30.0,alignment: .bottom)
+            if doneList.count > 0{
+                Form{
+                    ForEach(doneList.indices,id:\.self){
+                        index in Text(doneList[index])
+                            .font(.title2)
+                            .fontWeight(.bold)
+                            .foregroundColor(Color.blue)
+                            .multilineTextAlignment(.center)
+                            .lineLimit(4)
+                    }
+                }
+            }else{
+                Text("暂时没有数据").frame(width: 300, height: 100, alignment: .bottom    )
             }
         }
     }
 }
 
+//struct TodoDoneList:View{
+//    static var done:[String] = ["测试数据"]
+//    static func addDone(todo:String)->Void{
+//        print(done)
+//        done.append(todo)
+//    }
+//    var body: some View{
+//        if TodoDoneList.done.count != 0{
+//            List{
+//                ForEach(TodoDoneList.done.indices,id:\.self){
+//                    index in Text(TodoDoneList.done[index])
+//                }
+//            }
+//        }else{
+//            Text("There Is No TodoItem Done")
+//        }
+//    }
+//}
